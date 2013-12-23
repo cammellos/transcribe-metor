@@ -1,15 +1,19 @@
 if (Meteor.isClient) {
-  Template.hello.greeting = function () {
-    return "Welcome to transcribe.";
-  };
+  Template.canvas.events({
+     'click input': function() {
+        $.get("/xmls/sample.xml", function(response){
+           console.log(response);
+           var canvas = $("#main-canvas")[0];
+           var renderer = new Vex.Flow.Renderer(canvas,
+                  Vex.Flow.Renderer.Backends.CANVAS);
 
-  Template.hello.events({
-    'click input' : function () {
-      // template data, if any, is available in 'this'
-      if (typeof console !== 'undefined')
-        console.log("You pressed the button");
-    }
-  });
+           var ctx = renderer.getContext();
+           var stave = new Vex.Flow.Stave(10, 0, 500);
+           stave.addClef("treble").setContext(ctx).draw();
+                           
+        });
+        }
+     });
 }
 
 if (Meteor.isServer) {
