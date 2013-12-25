@@ -1,4 +1,32 @@
 if (Meteor.isClient) {
+  Template.mainContent.showCreateDialog = function () {
+    return Session.get("showCreateDialog");
+  };
+  Template.createDialog.error = function () {
+    return Session.get("createError");
+  };
+  Template.createDialog.events({
+     'click .save': function(event,template) {
+        var title = template.find(".title").value;
+        var description = template.find(".description").value;
+        if (title.length && description.length) {
+          var id = createSheet({
+            title: title,
+            description: description,
+          });
+          Session.set("showCreateDialog", false);
+        } else {
+           Session.set("createError",
+                  "It needs a title and a description, or why bother?");
+        }
+     }
+  });
+  Template.navigation.events({
+     'click .create-new-sheet': function() {
+        Session.set("createError", null);
+        Session.set("showCreateDialog", true);
+     }
+  });
   Template.canvas.events({
      'click input': function() {
         $.get("/xmls/sample.xml", function(response){
