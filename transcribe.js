@@ -2,10 +2,17 @@ if (Meteor.isClient) {
   Template.mainContent.showCreateDialog = function () {
     return Session.get("showCreateDialog");
   };
+  Template.navigation.userLoggedIn = function() {
+    return Meteor.userId();
+  };
   Template.createDialog.error = function () {
     return Session.get("createError");
   };
   Template.createDialog.events({
+     'click .cancel': function(event,template) {
+        Session.set("showCreateDialog", false);
+     },
+ 
      'click .save': function(event,template) {
         var title = template.find(".title").value;
         var description = template.find(".description").value;
@@ -14,6 +21,7 @@ if (Meteor.isClient) {
             title: title,
             description: description,
           });
+          console.log(id);
           Session.set("showCreateDialog", false);
         } else {
            Session.set("createError",
