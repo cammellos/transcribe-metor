@@ -2,9 +2,6 @@ if (Meteor.isClient) {
   Template.mainContent.showCreateDialog = function () {
     return Session.get("showCreateDialog");
   };
-  Template.navigation.userLoggedIn = function() {
-    return Meteor.userId();
-  };
   Template.createDialog.error = function () {
     return Session.get("createError");
   };
@@ -29,6 +26,11 @@ if (Meteor.isClient) {
         }
      }
   });
+
+  Template.navigation.sheets = function() {
+     return Sheets.find();
+  };
+
   Template.navigation.events({
      'click .create-new-sheet': function() {
         Session.set("createError", null);

@@ -1,6 +1,6 @@
-Sheet = new Meteor.Collection('sheets');
+Sheets = new Meteor.Collection('sheets');
 
-Sheet.allow({
+Sheets.allow({
   insert: function (userId, sheet) {
     return false; 
   },
@@ -48,7 +48,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "You must be logged in");
 
     var id = options._id || Random.id();
-    Sheet.insert({
+    Sheets.insert({
       _id: id,
       owners: [this.userId],
       title: options.title,
