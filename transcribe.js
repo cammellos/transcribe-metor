@@ -18,7 +18,6 @@ if (Meteor.isClient) {
             title: title,
             description: description,
           });
-          console.log(id);
           Session.set("showCreateDialog", false);
         } else {
            Session.set("createError",
@@ -39,8 +38,7 @@ if (Meteor.isClient) {
   });
   Template.canvas.events({
      'click input': function() {
-        $.get("/xmls/sample.xml", function(response){
-           console.log(response);
+        $.get("/xmls/sample.xml", function(xml){
            var canvas = $("#main-canvas")[0];
            var renderer = new Vex.Flow.Renderer(canvas,
                   Vex.Flow.Renderer.Backends.CANVAS);
@@ -48,6 +46,8 @@ if (Meteor.isClient) {
            var ctx = renderer.getContext();
            var stave = new Vex.Flow.Stave(10, 0, 500);
            stave.addClef("treble").setContext(ctx).draw();
+           var xmlSheet = MusicXMLSheet.fromXML(xml);
+           console.log(xmlSheet.type);
                            
         });
         }
