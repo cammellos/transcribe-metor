@@ -19,7 +19,19 @@ MusicXMLPart.prototype = {
      };
    },
    toVexFlow: function(ctx,stave) {
+      var canvas_width = 700;
+      var stave_width = Math.floor(canvas_width / 4) - 4;
+      var stave_jump = 100;
+
       for(var i = 1; i< 7; i++) {
+        var tmp_width = stave.width + stave.x;
+        var tmp_height = stave.y;
+        if (tmp_width > canvas_width) {
+           tmp_width = 10;
+           tmp_height = tmp_height + stave_jump;
+        } 
+        var stave = new Vex.Flow.Stave(tmp_width, tmp_height,stave_width);
+        stave.setContext(ctx).draw();
         this.measures[i].toVexFlow(ctx,stave);
       }
    }
