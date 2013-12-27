@@ -30,8 +30,6 @@ MusicXMLMeasure.prototype = {
 
    },
    toVexFlow: function(ctx,stave) {
-      console.log(this);
-      console.log(this.xml);
       if (this.attributes && this.attributes.clef) {
          if(this.attributes.clef.line == "2" && this.attributes.clef.sign == "G") {
             //stave.addClef("treble");
@@ -43,7 +41,7 @@ MusicXMLMeasure.prototype = {
         resolution: Vex.Flow.RESOLUTION
       });
       voice.addTickables(this.notesToVexFlow());
-      var formatter = new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 500);
+      var formatter = new Vex.Flow.Formatter().joinVoices([voice]).format([voice], stave.width - 10);
       voice.draw(ctx,stave);
    }
 };
