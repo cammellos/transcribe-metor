@@ -29,7 +29,7 @@ MusicXMLSheet.prototype = {
       var canvas_width = 700;
       var stave_width = canvas_width / 4;
       var stave = new Vex.Flow.Stave(10,0,stave_width);
-      stave.setContext(ctx).draw();
+      //stave.setContext(ctx).draw();
       if(this.parts.length) {
          this.parts[0].toVexFlow(ctx,stave);
       };

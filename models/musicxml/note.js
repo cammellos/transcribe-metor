@@ -1,11 +1,14 @@
 MusicXMLNote = function(xml,attributes) {
    this.xml = xml;
+   console.log(this.xml);
    this.attributes = attributes;
    this.duration = parseInt(this.xml.getElementsByTagName("duration")[0].textContent);
    this.rest = this.isRest();
    this.voice = this.xml.getElementsByTagName("voice")[0].textContent;
+   if(this.xml.getElementsByTagName("type").length) {
+     this.type = this.xml.getElementsByTagName("type")[0].textContent;
+   }
    if(!this.rest) {
-     this.type = xml.getElementsByTagName("type")[0].textContent;
      this.parsePitch();
    }
 };
