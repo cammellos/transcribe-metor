@@ -4,9 +4,13 @@ MusicXMLNote = function(xml,attributes) {
    this.duration = parseInt(this.xml.getElementsByTagName("duration")[0].textContent);
    this.rest = this.isRest();
    this.voice = this.xml.getElementsByTagName("voice")[0].textContent;
+   var beam = this.xml.getElementsByTagName("beam");
+
+   if(beam.length) {
+      this.beam = {number: beam[0].getAttribute("number"), type: beam[0].textContent}
+   }
    if(this.xml.getElementsByTagName("dot").length) {
      this.dot = true;
-     console.log("dotted");
      //this.duration = this.duration / 3 * 2;
    }
    if(this.xml.getElementsByTagName("type").length) {
@@ -46,8 +50,6 @@ MusicXMLNote.prototype = {
       if(this.dot) {
          note = note.addDotToAll()
       }
-
-
      return note;
    }
 };
