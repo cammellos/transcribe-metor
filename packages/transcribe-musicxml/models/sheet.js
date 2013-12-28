@@ -6,11 +6,31 @@ Transcribe.MusicXML.Sheet = function(xml) {
 Transcribe.MusicXML.Sheet.prototype = {
    read: function(xml) {
       this.xml = xml;
-      this.parseParts();
+      this._parseParts();
+      var sheet = new Transcribe.Models.Sheet();
+      sheet.title = this._parseTitle();
+      sheet.workNumber = this._parseWorkNumber();
+      sheet.composer = this._parseComposer();
+      sheet.lyricist = this._parseLyricist();
+      sheet.copyright = this._parseCopyright();
+      return sheet;
    },
    write: function(sheet) {
    },
-   parseParts: function() {
+   _parseTitle: function() {
+      return Transcribe.Helpers.extractTextFromXML("work-title", this.xml);
+   },
+   _parseWorkNumber: function() {
+      return Transcribe.Helpers.extractTextFromXML("work-number", this.xml);
+   },
+   _parseComposer: function() {
+   },
+   _parseLyricist: function() {
+   },
+   _parseCopyright: function() {
+      return Transcribe.Helpers.extractTextFromXML("rights", this.xml);
+   },
+   _parseParts: function() {
       var pListXML = this.partListsXML();
       for(var i = 0; i < pListXML.children.length; i++) {
          var partList = new Transcribe.MusicXML.PartList(pListXML.children[i]);
@@ -51,6 +71,5 @@ Transcribe.MusicXML.Sheet.fromXML = function (xml) {
    } else if (obj.xml.getElementsByTagName("score-timewise").length) {
       obj =  new Transcribe.MusicXML.TimewiseSheet();
    }
-   obj.read(xml);
-   return obj;
+   return obj.read(xml);
 };
