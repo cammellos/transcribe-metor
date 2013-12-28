@@ -5,8 +5,7 @@ if (Meteor.isClient) {
       var sheet = Transcribe.MusicXML.Sheet.fromXML(xmlDoc);
       test.equal(sheet.title, "An Chloe (Page 1)", 'Title should be set');
       test.equal(sheet.workNumber,"K. 524", "Work number should be set"); 
-      test.equal(sheet.composer, "Wolfgang Amadeus Mozart");
-      test.equal(sheet.lyricist, "Johann Georg Jacoby");
+      test.equal(sheet.creators, [{name: "Wolfgang Amadeus Mozart",type: "composer"}, {name: "Johann Georg Jacobi", type: "lyricist"}]);
       test.equal(sheet.copyright, "Copyright © 2002 Recordare LLC");
       test.equal(sheet.parts.length, 3);
     });

@@ -10,8 +10,7 @@ Transcribe.MusicXML.Sheet.prototype = {
       var sheet = new Transcribe.Models.Sheet();
       sheet.title = this._parseTitle();
       sheet.workNumber = this._parseWorkNumber();
-      sheet.composer = this._parseComposer();
-      sheet.lyricist = this._parseLyricist();
+      sheet.creators = this._parseCreators();
       sheet.copyright = this._parseCopyright();
       return sheet;
    },
@@ -23,9 +22,13 @@ Transcribe.MusicXML.Sheet.prototype = {
    _parseWorkNumber: function() {
       return Transcribe.Helpers.extractTextFromXML("work-number", this.xml);
    },
-   _parseComposer: function() {
-   },
-   _parseLyricist: function() {
+   _parseCreators: function() {
+     var divs = this.xml.getElementsByTagName("creator");
+     var creators = [];
+     for(var i =0; i< divs.length;i++) {
+        creators.push({name: divs[i].textContent, type: divs[i].getAttribute("type")})
+     }
+     return creators;
    },
    _parseCopyright: function() {
       return Transcribe.Helpers.extractTextFromXML("rights", this.xml);
