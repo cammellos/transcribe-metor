@@ -1,4 +1,4 @@
-MusicXMLMeasure = function(xml,attributes) {
+Transcribe.MusicXML.Measure = function(xml,attributes) {
    this.xml = xml;
    this.number = this.xml.getAttribute("number");
    //if (xml.getElementsByTagName('attributes').length) {
@@ -10,11 +10,11 @@ MusicXMLMeasure = function(xml,attributes) {
    this.parseNotes();
 };
 
-MusicXMLMeasure.prototype = {
+Transcribe.MusicXML.Measure.prototype = {
    parseNotes: function() {
      var notesXML = this.xml.getElementsByTagName('note');
      for(var i = 0; i< notesXML.length; i++) {
-        this.notes.push(new MusicXMLNote(notesXML[i],this.attributes));
+        this.notes.push(new Transcribe.MusicXML.Note(notesXML[i],this.attributes));
      }
    },
    xmlToVexFlowClef: function(clef) {

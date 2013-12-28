@@ -14,7 +14,7 @@ if (Meteor.isClient) {
         var title = template.find(".title").value;
         var description = template.find(".description").value;
         if (title.length && description.length) {
-          var id = createSheet({
+          var id = Transcribe.Collections.createSheet({
             title: title,
             description: description,
           });
@@ -27,7 +27,7 @@ if (Meteor.isClient) {
   });
 
   Template.navigation.sheets = function() {
-     return Sheets.find();
+     return Transcribe.Collections.Sheets.find();
   };
 
   Template.navigation.events({
@@ -43,11 +43,8 @@ if (Meteor.isClient) {
            var renderer = new Vex.Flow.Renderer(canvas,
                   Vex.Flow.Renderer.Backends.CANVAS);
            var ctx = renderer.getContext();
-           var xmlSheet = MusicXMLSheet.fromXML(xml);
+           var xmlSheet = Transcribe.MusicXML.Sheet.fromXML(xml);
            var stave = xmlSheet.toVexFlow(ctx);
-           stave.setContext(ctx).draw();
-
-                           
         });
         }
      });

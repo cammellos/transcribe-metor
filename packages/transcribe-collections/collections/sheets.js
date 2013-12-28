@@ -1,6 +1,5 @@
-Sheets = new Meteor.Collection('sheets');
-
-Sheets.allow({
+Transcribe.Collections.Sheets = new Meteor.Collection('sheets');
+Transcribe.Collections.Sheets.allow({
   insert: function (userId, sheet) {
     return false; 
   },
@@ -14,12 +13,11 @@ Sheets.allow({
     return true;
   },
   remove: function (userId, sheet) {
-    // You can only remove parties that you created and nobody is going to.
     return sheet.owners.indexOf(userId) !== -1;
   }
 });
 
-createSheet = function (options) {
+Transcribe.Collections.createSheet = function (options) {
   var id = Random.id();
   Meteor.call('createSheet', _.extend({ _id: id }, options));
   return id;
@@ -32,7 +30,6 @@ var NonEmptyString = Match.Where(function (x) {
 
 
 Meteor.methods({
-  // options should include: title, description, x, y, public
   createSheet: function (options) {
     check(options, {
       title: NonEmptyString,
@@ -48,7 +45,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "You must be logged in");
 
     var id = options._id || Random.id();
-    Sheets.insert({
+    Transcribe.Collections.Sheets.insert({
       _id: id,
       owners: [this.userId],
       title: options.title,
@@ -58,6 +55,3 @@ Meteor.methods({
     return id;
   },
 });
-
-
-

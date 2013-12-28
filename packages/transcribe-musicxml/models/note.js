@@ -1,4 +1,4 @@
-MusicXMLNote = function(xml,attributes) {
+Transcribe.MusicXML.Note = function(xml,attributes) {
    this.xml = xml;
    this.attributes = attributes;
    this.duration = parseInt(this.xml.getElementsByTagName("duration")[0].textContent);
@@ -25,7 +25,7 @@ MusicXMLNote = function(xml,attributes) {
    }
 };
 
-MusicXMLNote.prototype = {
+Transcribe.MusicXML.Note.prototype = {
    isRest: function() {
      return this.xml.getElementsByTagName("rest").length != 0;
    },
