@@ -1,22 +1,31 @@
 Transcribe.MusicXML.Measure = function(xml,attributes) {
-   this.xml = xml;
-   this.number = this.xml.getAttribute("number");
+   //this.xml = xml;
+   //this.number = this.xml.getAttribute("number");
    //if (xml.getElementsByTagName('attributes').length) {
    //  this.attributes = new MusicXMLMeasureAttributes(xml.getElementsByTagName('attributes')[0]);
    //} else {
-     this.attributes = attributes;
+   //this.attributes = attributes;
    //}
    this.notes = [];
-   this.parseNotes();
 };
+Transcribe.MusicXML.Measure.read = function(xml,stave) {
+   var measure = new Transcribe.Models.Measure();
+   measure.stave = stave;
+   measure.notes = Transcribe.MusicXML.Measure._parseNotes(xml,stave);
+   return measure;
+}
+Transcribe.MusicXML.Measure._parseNotes = function(xml,stave) {
+     var notesXML = xml.getElementsByTagName('note');
+     var notes = [];
+     for(var i = 0; i< notesXML.length; i++) {
+        var note = Transcribe.MusicXML.Note.read(notesXML[i],stave);
+        notes.push(note);
+     }
+     return notes;
+   },
+
 
 Transcribe.MusicXML.Measure.prototype = {
-   parseNotes: function() {
-     var notesXML = this.xml.getElementsByTagName('note');
-     for(var i = 0; i< notesXML.length; i++) {
-        this.notes.push(new Transcribe.MusicXML.Note(notesXML[i],this.attributes));
-     }
-   },
    xmlToVexFlowClef: function(clef) {
 
    },

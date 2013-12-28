@@ -2,6 +2,9 @@ Transcribe.MusicXML.Stave = function() {
    this.measures = [];
 
 };
+Transcribe.MusicXML.Stave.prototype = {
+}
+
 
 Transcribe.MusicXML.Stave.read = function(xml) {
    var staves = [];
@@ -11,10 +14,11 @@ Transcribe.MusicXML.Stave.read = function(xml) {
 
    var nStaves = xml.getElementsByTagName('staves').length ? parseInt(Transcribe.Helpers.extractTextFromXML('staves', xml)) : 1
    for(var i = 0; i< nStaves; i++) {
-     var st = new Transcribe.MusicXML.Stave();
+     var st = new Transcribe.Models.Stave();
      st.time = time;
      st.divisions = divisions;
      st.key = key;
+     st.number = i;
      staves.push(st);
    }
    var clefs = xml.getElementsByTagName("clef");

@@ -1,0 +1,3 @@
+Transcribe.Models.Note = function() {
+
+};

@@ -43,9 +43,20 @@ Transcribe.MusicXML.Sheet.prototype = {
          part.name = Transcribe.Helpers.extractTextFromXML("part-name", pListXML.children[i]);
          part.instrument = Transcribe.Helpers.extractTextFromXML("instrument-name", pListXML.children[i]);
          part.staves = new Transcribe.MusicXML.Stave.read(this.xml.querySelector("part#" + part.id));
+         this._parseMeasures(this.xml.querySelector("part#" + part.id),part);
          parts.push(part);
       };
+      console.log(parts);
       return parts;
+   },
+   _parseMeasures: function(xml,part) {
+     var measuresXML = xml.getElementsByTagName("measure");
+     for(var j = 0; j < part.staves.length; j++) {
+       for(var i = 0; i < measuresXML.length; i++) {
+          var measure = new Transcribe.MusicXML.Measure.read(measuresXML[i],part.staves[j]);
+          part.staves[j].measures.push(measure);
+       };
+     };
    },
    toVexFlow: function(ctx) {
       if(this.parts.length) {
