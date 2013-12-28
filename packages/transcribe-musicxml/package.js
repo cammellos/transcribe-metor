@@ -15,3 +15,8 @@ Package.on_use(function (api) {
   api.add_files(path.join(asset_path, 'sheet.js'), 'client');
 
 });
+Package.on_test(function (api) {
+  var path = Npm.require('path');
+  api.use(['transcribe','transcribe-musicxml', 'tinytest', 'test-helpers'], 'client');
+  api.add_files(path.join('tests', 'sheet.js'));
+});
