@@ -1,29 +1,5 @@
 
 Transcribe.MusicXML.Note = function(xml,attributes) {
-   this.xml = xml;
-   this.attributes = attributes;
-   this.duration = parseInt(this.xml.getElementsByTagName("duration")[0].textContent);
-   this.rest = this.isRest();
-   this.voice = this.xml.getElementsByTagName("voice")[0].textContent;
-   var beam = this.xml.getElementsByTagName("beam");
-   var slur = this.xml.getElementsByTagName("slur");
-
-   if(slur.length) {
-      this.slur = {number: slur[0].getAttribute("number"), type: slur[0].textContent, placement: slur[0].getAttribute("placement")}
-   }
-   if(beam.length) {
-      this.beam = {number: beam[0].getAttribute("number"), type: beam[0].textContent}
-   }
-   if(this.xml.getElementsByTagName("dot").length) {
-     this.dot = true;
-     //this.duration = this.duration / 3 * 2;
-   }
-   if(this.xml.getElementsByTagName("type").length) {
-     this.type = this.xml.getElementsByTagName("type")[0].textContent;
-   }
-   if(!this.rest) {
-     this.parsePitch();
-   }
 };
 
 Transcribe.MusicXML.Note.parsePitch = function(xml) {
@@ -33,12 +9,13 @@ Transcribe.MusicXML.Note.parsePitch = function(xml) {
       return {step: step, octave: octave};
 }
 
-Transcribe.MusicXML.Note.read = function(xml,part) {
+Transcribe.MusicXML.Note.read = function(xml,stave) {
    var note = new Transcribe.Models.Note();
-   note.part = part;
+   note.stave = stave;
    note.duration = parseInt(xml.getElementsByTagName("duration")[0].textContent);
    note.rest = xml.getElementsByTagName("rest").length != 0;
    note.voice = xml.getElementsByTagName("voice")[0].textContent;
+   note.staff = Transcribe.Helpers.extractTextFromXML("staff",xml) ? parseInt(Transcribe.Helpers.extractTextFromXML("staff",xml)) : 1;
    var beam = xml.getElementsByTagName("beam");
    var slur = xml.getElementsByTagName("slur");
 

@@ -19,7 +19,9 @@ Transcribe.MusicXML.Measure._parseNotes = function(xml,stave) {
      var notes = [];
      for(var i = 0; i< notesXML.length; i++) {
         var note = Transcribe.MusicXML.Note.read(notesXML[i],stave);
-        notes.push(note);
+        if(note.staff  - 1 == stave.number) {
+          notes.push(note);
+        }
      }
      return notes;
    },
