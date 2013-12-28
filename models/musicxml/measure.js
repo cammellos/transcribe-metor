@@ -23,6 +23,7 @@ MusicXMLMeasure.prototype = {
    notesToVexFlow: function() {
       var n = [];
       var beams = [];
+      var slurs = [];
       for(var i = 0; i<this.notes.length; i++) {
          var vexNote = this.notes[i].toVexFlow();
          if( this.notes[i].beam ) {
@@ -31,9 +32,15 @@ MusicXMLMeasure.prototype = {
             }
             beams[this.notes[i].beam.number].push(vexNote);
          }
+         if( this.notes[i].slur ) {
+            if (!slurs[this.notes[i].slur.number]) {
+               slurs[this.notes[i].slur.number] = []
+            }
+            slurs[this.notes[i].slur.number].push(vexNote);
+         }
          n.push(vexNote);
       }
-      return {notes: n, beams: beams};
+      return {notes: n, slurs: slurs, beams: beams};
 
    },
    toVexFlow: function(ctx,stave) {
@@ -49,12 +56,23 @@ MusicXMLMeasure.prototype = {
       });
       var n = this.notesToVexFlow();
       var beams = [];
+      var slurs = [];
 
       for (var i = 0; i < n.beams.length; i++) {
          if (n.beams[i]) {
             beams.push(new Vex.Flow.Beam(n.beams[i]));
          }
       }
+      for (var i = 0; i < n.slurs.length; i++) {
+         if (n.slurs[i]) {
+            slurs.push(new Vex.Flow.StaveTie({
+               first_note: n.slurs[i][0],
+               last_note: n.slurs[i][1],
+               first_indices: [0],
+               last_indices: [0]}))
+         }
+      }
+
 
 
       voice.addTickables(n.notes);
@@ -64,6 +82,10 @@ MusicXMLMeasure.prototype = {
       for (var i = 0; i < beams.length; i++ ) {
         beams[i].setContext(ctx).draw();
       }
+      for (var i = 0; i < slurs.length; i++ ) {
+        slurs[i].setContext(ctx).draw();
+      }
+
 
    }
 };

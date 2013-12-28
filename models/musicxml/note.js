@@ -5,7 +5,11 @@ MusicXMLNote = function(xml,attributes) {
    this.rest = this.isRest();
    this.voice = this.xml.getElementsByTagName("voice")[0].textContent;
    var beam = this.xml.getElementsByTagName("beam");
+   var slur = this.xml.getElementsByTagName("slur");
 
+   if(slur.length) {
+      this.slur = {number: slur[0].getAttribute("number"), type: slur[0].textContent, placement: slur[0].getAttribute("placement")}
+   }
    if(beam.length) {
       this.beam = {number: beam[0].getAttribute("number"), type: beam[0].textContent}
    }
