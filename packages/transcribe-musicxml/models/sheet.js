@@ -12,6 +12,7 @@ Transcribe.MusicXML.Sheet.prototype = {
       sheet.workNumber = this._parseWorkNumber();
       sheet.creators = this._parseCreators();
       sheet.copyright = this._parseCopyright();
+      sheet.parts = this._parseParts();
       return sheet;
    },
    write: function(sheet) {
@@ -34,15 +35,17 @@ Transcribe.MusicXML.Sheet.prototype = {
       return Transcribe.Helpers.extractTextFromXML("rights", this.xml);
    },
    _parseParts: function() {
-      var pListXML = this.partListsXML();
+      var pListXML = this.xml.getElementsByTagName("part-list")[0];
+      var parts = [];
       for(var i = 0; i < pListXML.children.length; i++) {
-         var partList = new Transcribe.MusicXML.PartList(pListXML.children[i]);
-         this.partLists.push(partList);
-         this.parts.push(new Transcribe.MusicXML.Part(this.xml.querySelector("part#" + partList.id)));
+         var part = new Transcribe.Models.Part();
+         part.id = pListXML.children[i].getAttribute('id');
+         part.name = Transcribe.Helpers.extractTextFromXML("part-name", pListXML.children[i]);
+         part.instrument = Transcribe.Helpers.extractTextFromXML("instrument-name", pListXML.children[i]);
+         part.staves = new Transcribe.MusicXML.Stave.read(this.xml.querySelector("part#" + part.id));
+         parts.push(part);
       };
-   },
-   partListsXML: function() {
-     return this.xml.getElementsByTagName("part-list")[0];
+      return parts;
    },
    toVexFlow: function(ctx) {
       if(this.parts.length) {

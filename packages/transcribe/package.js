@@ -7,5 +7,7 @@ Package.on_use(function (api) {
   api.add_files(path.join('init.js'), ['client','server']);
   api.add_files(path.join('helpers.js'), ['client','server']);
   api.add_files(path.join('models','sheet.js'), ['client','server']);
+  api.add_files(path.join('models','part.js'), ['client','server']);
+  api.add_files(path.join('models','stave.js'), ['client','server']);
   api.export('Transcribe');
 });
