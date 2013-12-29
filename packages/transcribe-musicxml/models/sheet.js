@@ -13,6 +13,7 @@ Transcribe.MusicXML.Sheet.prototype = {
       sheet.creators = this._parseCreators();
       sheet.copyright = this._parseCopyright();
       sheet.parts = this._parseParts();
+      console.log(sheet);
       return sheet;
    },
    write: function(sheet) {
@@ -24,12 +25,7 @@ Transcribe.MusicXML.Sheet.prototype = {
       return Transcribe.Helpers.extractTextFromXML("work-number", this.xml);
    },
    _parseCreators: function() {
-     var divs = this.xml.getElementsByTagName("creator");
-     var creators = [];
-     for(var i =0; i< divs.length;i++) {
-        creators.push({name: divs[i].textContent, type: divs[i].getAttribute("type")})
-     }
-     return creators;
+     return _.map(this.xml.getElementsByTagName("creator"),function(div) { return {name: div.textContent, type: div.getAttribute("type")}})
    },
    _parseCopyright: function() {
       return Transcribe.Helpers.extractTextFromXML("rights", this.xml);

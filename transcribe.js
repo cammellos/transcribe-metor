@@ -39,12 +39,10 @@ if (Meteor.isClient) {
   Template.canvas.events({
      'click input': function() {
         $.get("/xmls/sample.xml", function(xml){
-           var canvas = $("#main-canvas")[0];
-           var renderer = new Vex.Flow.Renderer(canvas,
-                  Vex.Flow.Renderer.Backends.CANVAS);
-           var ctx = renderer.getContext();
-           var xmlSheet = Transcribe.MusicXML.Sheet.fromXML(xml);
-           var stave = xmlSheet.toVexFlow(ctx);
+           var sheet = Transcribe.MusicXML.Sheet.fromXML(xml);
+           var vexFlowSheet = new Transcribe.VexFlow.Sheet(sheet);
+           vexFlowSheet.render($("#main-canvas")[0]);
+
         });
         }
      });
