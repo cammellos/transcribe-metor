@@ -16,6 +16,7 @@ Transcribe.MusicXML.Note.read = function(xml,stave) {
    note.rest = xml.getElementsByTagName("rest").length != 0;
    note.voice = xml.getElementsByTagName("voice")[0].textContent;
    note.staff = Transcribe.Helpers.extractTextFromXML("staff",xml) ? parseInt(Transcribe.Helpers.extractTextFromXML("staff",xml)) : 1;
+   note.triplet = xml.getElementsByTagName("time-modification").length ? true : false;
    var beam = xml.getElementsByTagName("beam");
    var slur = xml.getElementsByTagName("slur");
 
