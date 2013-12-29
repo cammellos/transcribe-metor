@@ -13,28 +13,32 @@ Transcribe.VexFlow.Sheet.prototype = {
       var width = opts.width || canvas.width;
       var height = opts.height || canvas.height;
       var ctx = renderer.getContext();
-      var staveWidth = Math.floor(width/4) - 4;
+      var measureWidth = Math.floor(width/4) - 4;
       var staveDistance = opts.staveDistance || 100;
-      var staveY = 0;
-      var staveX = 10;
+      var measureY = 0;
       _.each(this.sheet.parts,function(part) {
-         var staves = _.map(part.staves,function(stave) {
-           var vexFlowStave = new Vex.Flow.Stave(staveX,staveY,staveWidth);
-           vexFlowStave.setContext(ctx).draw();
-           if (stave.clef) {
-              vexFlowStave.addClef(Transcribe.VexFlow.Clefs[stave.clef.sign]).setContext(ctx).draw();
-           }
-           _.each(part.measures,function(measure) {
-              if(staveX + staveWidth > width) {
-                 staveX = 10;
-                 staveY += staveDistance;
+         var vexFlowStaves = _.map(part.staves,function(stave) {
+           var measureX = 10;
+           var vexFlowMeasures = _.map(stave.measures,function(measure) {
+              var vexFlowMeasure = new Vex.Flow.Stave(measureX,measureY,measureWidth);
+              vexFlowMeasure.setContext(ctx).draw();
+              if(measureX + measureWidth > width) {
+                 measureX = 10;
+                 measureY += staveDistance;
+              } else {
+                measureX += measureWidth;
               }
+
+              return vexFlowMeasure;
            });
-           staveY += staveDistance;
-           return vexFlowStave;
+           measureY += staveDistance;
+           if (stave.clef && vexFlowMeasures.length) {
+             vexFlowMeasures[0].addClef(Transcribe.VexFlow.Clefs[stave.clef.sign]).setContext(ctx).draw();
+           }
+           return vexFlowMeasures;
          });
-         if(staves.length > 1) {
-            var connector = new Vex.Flow.StaveConnector(staves[0],staves.pop());
+         if(vexFlowStaves.length > 1) {
+            var connector = new Vex.Flow.StaveConnector(vexFlowStaves[0][0],vexFlowStaves.pop()[0]);
             connector.setType(Vex.Flow.StaveConnector.type.SINGLE);
             connector.setContext(ctx).draw();
          };
