@@ -14,7 +14,7 @@ Transcribe.VexFlow.Sheet.prototype = {
       var height = opts.height || canvas.height;
       var ctx = renderer.getContext();
       var measureWidth = Math.floor(width/4) - 4;
-      var staveDistance = opts.staveDistance || 100;
+      var staveDistance = opts.staveDistance || 130;
       var nStaves = 0;
       var totalStaves = _.reduce(this.sheet.parts,function(memo,part) { return memo + part.staves.length},0)
 
@@ -33,7 +33,11 @@ Transcribe.VexFlow.Sheet.prototype = {
                 measureX += measureWidth;
               }
 
-              var vexFlowNotes = _.map(measure.notes,function(note) {
+              var vexFlowBeams = [];
+              var vexFlowSlurs = [];
+              var vexFlowTuplets = [];
+              var vexFlowNotes = [];
+              _.each(measure.notes,function(note) {
                  var duration = note.duration;
                  if (note.dot) {
                    duration = (1/(note.duration/3*2/stave.divisions*0.25)).toString() + "d";
@@ -52,11 +56,53 @@ Transcribe.VexFlow.Sheet.prototype = {
                  var vexFlowNote = new Vex.Flow.StaveNote(attrs);
 
                  if(note.dot) {
-                    return vexFlowNote.addDotToAll()
-                 } else {
-                    return vexFlowNote;
+                    vexFlowNote = vexFlowNote.addDotToAll()
+                 } 
+                 if (note.beam) {
+                    if (!vexFlowBeams[note.beam.number]) {
+                       vexFlowBeams[note.beam.number] = [];
+                    }
+                    vexFlowBeams[note.beam.number].push(vexFlowNote);
+                 }
+                 if (note.slur) {
+                    if (!vexFlowSlurs[note.slur.number]) {
+                       vexFlowSlurs[note.slur.number] = [];
+                    }
+                    vexFlowSlurs[note.slur.number].push(vexFlowNote);
+                 }
+                 vexFlowNotes.push(vexFlowNote);
+              });
+              var voice = new Vex.Flow.Voice({
+                 num_beats: measure.attributes && measure.attributes.time && measure.attributes.time.beats ? measure.attributes.time.beats : "4",
+                 beat_value: measure.attributes && measure.attributes.time && measure.attributes.time["beat-type"] ? measure.attributes.time["beat-type"] : "4",
+                 resolution: Vex.Flow.RESOLUTION
+              });
+
+              var drawableBeams = [];
+              _.each(vexFlowBeams,function(vexFlowBeam) {
+                 if(vexFlowBeam) {
+                    drawableBeams.push(new Vex.Flow.Beam(vexFlowBeam));
                  }
               });
+
+              var drawableSlurs = [];
+              _.each(vexFlowSlurs,function(vexFlowSlur,index) {
+                 if(vexFlowSlur) {
+                    drawableSlurs.push(new Vex.Flow.StaveTie({
+                      first_note: vexFlowSlur[0],
+                      last_note: vexFlowSlur[1],
+                      first_indices: [0],
+                      last_indices: [0]
+                    }));
+                 }
+              });
+
+              voice.setStrict(false);
+              voice.addTickables(vexFlowNotes);
+              var formatter = new Vex.Flow.Formatter().joinVoices([voice]).format([voice], vexFlowMeasure.width - 10);
+              voice.draw(ctx,vexFlowMeasure);
+              _.map(drawableSlurs,function(s) { s.setContext(ctx).draw()});
+              _.map(drawableBeams,function(s) { s.setContext(ctx).draw()});
 
               return vexFlowMeasure;
            });
