@@ -46,7 +46,6 @@ Transcribe.MusicXML.Sheet.prototype = {
          this._parseMeasures(this.xml.querySelector("part#" + part.id),part);
          parts.push(part);
       };
-      console.log(parts);
       return parts;
    },
    _parseMeasures: function(xml,part) {
